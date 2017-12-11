@@ -54,10 +54,10 @@
     <div class="container theme-showcase" role="main">
       <div class="jumbotron">
         <h1>FINAL PROJECT</h1>
-        <h2>PROJECT: MICRO-PHONE HAT </h2></div>
+        <h2>PROJECT: Berg Hat </h2></div>
       <div class="row">
         <div class="well">
-			  <h4>In our life, we find that if we forcus on our phone while walking, we may be easy to bump into some obstacles. So we decide to make a MICRO-PHONE HAT which can inform you where you can go.</h4>
+			  <h4>In our life, we find that if we forcus on our phone while walking, we may be easy to bump into some obstacles. So we decide to make a BERG HAT which can inform you where you can go.</h4>
 		  </div>
         <div class="well">
 			  <h4>And we've made our protype.</h4>
@@ -68,30 +68,402 @@
 		  	<h4>
 		  		Here is our code.
 		  	</h4>
-	    </div>
-          &emsp;&emsp;&emsp;<img src="image/FINAL_2.png" width="635" height="1000">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_3.png" width="435" height="1000">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_4.png" width="435" height="800">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_5.png" width="435" height="1000">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_6.png" width="335" height="1000">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_7.png" width="235" height="1000">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_8.png" width="235" height="1000">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_9.png" width="635" height="1000">
-          &emsp;&emsp;&emsp;<img src="image/FINAL_10.png" width="635" height="1000">
-          <br />
-          &emsp;&emsp;&emsp;<img src="image/FINAL_11.png" width="435" height="400">
-          <br />
+	    <pre>
+const int echopin=A0; // echo接5端口
+const int trigpin=4; // trig接4端口  左侧超声波测距器
+
+
+const int echopin2=A1;
+const int trigpin2=2;// 右侧超声波测距器
+
+
+const int echopin3=A2;
+const int trigpin3=7;// 前方超声波测距器
+float F,R,L ;
+
+ int ColDataInput = 8;
+ int ColConfirm = 9;
+ int ColData = 10;
+
+int RowDataInput = 11;
+int RowConfirm = 12;
+int RowData = 13;
+
+void setup()
+{
+  Serial.begin(9600);  
+  pinMode(echopin,INPUT); //设定echo为输入模式
+  pinMode(trigpin,OUTPUT);//设定trig为输出模式
+  pinMode(echopin2,INPUT);
+  pinMode(trigpin2,OUTPUT);
+  pinMode(echopin3,INPUT);
+  pinMode(trigpin3,OUTPUT);
+  pinMode(8,OUTPUT);
+  pinMode(9,OUTPUT);
+  pinMode(10,OUTPUT);
+  
+  pinMode(11, OUTPUT);  
+   pinMode(12, OUTPUT);  
+   pinMode(13, OUTPUT);  
+
+  
+}
+void ConfirmRowDataInput()  
+ {  
+   digitalWrite(RowDataInput, HIGH);  
+   digitalWrite(RowDataInput, LOW);  
+ }  
+  
+void ConfirmRowDataAll()  
+ {  
+   digitalWrite(RowConfirm, HIGH);  
+   digitalWrite(RowConfirm, LOW);  
+ }  
+  
+void ConfirmColDataInput()  
+ {  
+   digitalWrite(ColDataInput, HIGH);  
+   digitalWrite(ColDataInput, LOW);  
+ }  
+  
+void ConfirmColDataAll()  
+ {  
+   digitalWrite(ColConfirm, HIGH);  
+   digitalWrite(ColConfirm, LOW);  
+ }  
+  
+void SelectRow(int ID)  
+ {  
+   for (int i = 1; i <= 8; i++)  
+   {  
+     if (i == ID)  
+     {  
+       digitalWrite(RowData, LOW);  
+     }  
+     else  
+     {  
+       digitalWrite(RowData, HIGH); 
+     }  
+  
+    ConfirmRowDataInput();  
+  
+  }  
+   ConfirmRowDataAll();  
+ }  
+  
+void SelectCol(char Data[8])  
+ {  
+   for (int i = 0; i < 8; i++)  
+   {  
+     if (Data[i] == '0')  
+       digitalWrite(ColData, LOW); 
+     else  
+       digitalWrite(ColData, HIGH); 
+     ConfirmColDataInput(); 
+   }  
+  ConfirmColDataAll(); 
+ }  
+  
+void ClearAll()  
+ {  
+   for (int i = 1; i <= 8; i++)  
+   {  
+     digitalWrite(RowData, HIGH);
+     ConfirmRowDataInput(); 
+   }  
+   ConfirmRowDataAll();  
+  
+  for (int i = 1; i <= 8; i++)  
+   {  
+     digitalWrite(ColData, LOW); 
+     ConfirmColDataInput(); 
+   }  
+   ConfirmColDataAll(); 
+  
+}  
+  
+void turnLeft()  
+ {  
+   ClearAll();  
+   SelectRow(1);  
+   SelectCol("00010000"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(2);  
+   SelectCol("00110000"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(3);  
+   SelectCol("01011111"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(4);  
+   SelectCol("10000001"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(5);  
+   SelectCol("10000001");  
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(6);  
+   SelectCol("01011111"); 
+   delay(1);  
+    
+  ClearAll();  
+   SelectRow(7);  
+   SelectCol("00110000"); 
+   delay(1);  
+
+    
+  ClearAll();  
+   SelectRow(8);  
+   SelectCol("00010000"); 
+   delay(1);  
+}  
+  
+void turnRight()  
+ {  
+   ClearAll();  
+   SelectRow(1);  
+   SelectCol("00001000"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(2);  
+   SelectCol("00001100"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(3);  
+   SelectCol("11111010"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(4);  
+   SelectCol("10000001"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(5);  
+   SelectCol("10000001");  
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(6);  
+   SelectCol("11111010"); 
+   delay(1);  
+    
+  ClearAll();  
+   SelectRow(7);  
+   SelectCol("00001100"); 
+   delay(1);  
+
+    
+  ClearAll();  
+   SelectRow(8);  
+   SelectCol("00001000"); 
+   delay(1);  
+}  
+
+
+void nowhere()  
+ {  
+   ClearAll();  
+   SelectRow(1);  
+   SelectCol("10000001"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(2);  
+   SelectCol("01000010"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(3);  
+   SelectCol("00100100"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(4);  
+   SelectCol("00011000"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(5);  
+   SelectCol("00011000");  
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(6);  
+   SelectCol("00100100"); 
+   delay(1);  
+    
+  ClearAll();  
+   SelectRow(7);  
+   SelectCol("01000010"); 
+   delay(1);  
+
+    
+  ClearAll();  
+   SelectRow(8);  
+   SelectCol("10000001"); 
+   delay(1);  
+}  
+
+void everywhere()  
+ {  
+   ClearAll();  
+   SelectRow(1);  
+   SelectCol("11100111"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(2);  
+   SelectCol("10100101"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(3);  
+   SelectCol("11100111"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(4);  
+   SelectCol("00000000"); 
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(5);  
+   SelectCol("00000000");  
+   delay(1);  
+  
+  ClearAll();  
+   SelectRow(6);  
+   SelectCol("10000001"); 
+   delay(1);  
+    
+  ClearAll();  
+   SelectRow(7);  
+   SelectCol("01000010"); 
+   delay(1);  
+
+    
+  ClearAll();  
+   SelectRow(8);  
+   SelectCol("00111100"); 
+   delay(1);  
+}  
+void loop()
+{
+  // *********************************** 左方测距******/
+  digitalWrite(trigpin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigpin,LOW); //发一个10ms的高脉冲去触发TrigPin
+  float distanceL = pulseIn(echopin,HIGH);//接收高电平时间
+  distanceL = distanceL/58.0;//计算距离
+        if (distanceL > 400)
+  {
+    distanceL = L;
+  }
+  else{
+    L = distanceL;
+  }
+  Serial.println(distanceL);
+
+
+/*******************右方测距******************************************/
+
+  digitalWrite(trigpin2,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin2,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigpin2,LOW); //发一个10ms的高脉冲去触发TrigPin
+  float distanceR = pulseIn(echopin2,HIGH);//接收高电平时间
+  distanceR = distanceR/58.0;//计算距离
+        if (distanceR > 400)
+  {
+    distanceR = R;
+  }
+  else{
+    R = distanceR;
+  }
+  Serial.println(distanceR);
+
+// *******************前方测距********************************************/
+  digitalWrite(trigpin3,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin3,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigpin3,LOW); //发一个10ms的高脉冲去触发TrigPin 
+  float distanceF = pulseIn(echopin3,HIGH);//接收高电平时间
+  distanceF = distanceF/58.0;//计算距离
+   
+    if (distanceF > 400)
+  {
+    distanceF = F;
+  }
+  else{
+    F = distanceF;
+  }
+
+
+
+ Serial.println(distanceF);
+  if (distanceF <=50){
+    if (distanceL>distanceR){
+      if(distanceL<40){
+  for (int i = 0 ; i < 200 ; i++)
+  {
+    nowhere();
+  }
+        }else{
+  for (int i = 0 ; i < 200 ; i++)
+  {
+    turnLeft();
+  }
+        }
+    }else{
+      if(distanceR<40){
+  for (int i = 0 ; i < 200 ; i++)
+  {
+    nowhere();
+  }
+        }else{
+  for (int i = 0 ; i < 200 ; i++)
+  {
+    turnRight();
+  }
+        }
+    }
+  }
+  else{
+  for (int i = 0 ; i < 200 ; i++)
+  {
+    everywhere();
+  }
+  }
+ClearAll();
+delay(100);
+
+}
+</pre>
         <div class="well">
 			  <h4>And this is the outside of our "hat".</h4>
 		  </div>
-          &emsp;&emsp;&emsp;<img src="image/FINAL_12.png" width="635" height="400">
+          &emsp;&emsp;&emsp;<img src="image/FINAL_12.png" width="635" height="500">
+        <div class="well">
+			  <h4>We've printed the shell of our product. And make it be useful.</h4>
+		  </div>
+          &emsp;&emsp;&emsp;<img src="image/FINAL_2.jpg" width="635" height="800">
+          <br /><br />
+          &emsp;&emsp;&emsp;<img src="image/FINAL_3.jpg" width="635" height="800">
     </div> <!-- /container -->
 
 
